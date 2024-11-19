@@ -53,6 +53,8 @@ public class DB_GUI_Controller implements Initializable {
     private final DbConnectivityClass cnUtil = new DbConnectivityClass();
     private final ObservableList<Person> data = cnUtil.getData();
     private String majorField = "";
+    @FXML
+    private Label errorLBL,successLBL;
 
     public void setMajorField(ActionEvent event) {
         MenuItem m = (MenuItem) event.getSource();
@@ -70,20 +72,33 @@ public class DB_GUI_Controller implements Initializable {
             tv_major.setCellValueFactory(new PropertyValueFactory<>("major"));
             tv_email.setCellValueFactory(new PropertyValueFactory<>("email"));
             tv.setItems(data);
+            successLBL.setVisible(true);
+            successLBL.setText("Successfully loaded Database");
         } catch (Exception e) {
+            errorLBL.setVisible(true);
+            errorLBL.setText("Error: Could not load database");
             throw new RuntimeException(e);
         }
     }
 
     @FXML
     protected void addNewRecord() {
+        errorLBL.setVisible(false);
+        successLBL.setVisible(false);
 
             Person p = new Person(first_name.getText(), last_name.getText(), department.getText(),
                     MajorMenu.getText(), email.getText(), imageURL.getText());
-            cnUtil.insertUser(p);
-            cnUtil.retrieveId(p);
-            p.setId(cnUtil.retrieveId(p));
-            data.add(p);
+            try {
+                cnUtil.insertUser(p);
+                cnUtil.retrieveId(p);
+                p.setId(cnUtil.retrieveId(p));
+                data.add(p);
+                successLBL.setVisible(true);
+                successLBL.setText("Successfully added: " + first_name.getText() + " to the DB");
+            } catch (Exception e ) {
+                errorLBL.setVisible(true);
+                errorLBL.setText("Unable to add user, Try again");
+            }
             clearForm();
 
     }
@@ -134,15 +149,25 @@ public class DB_GUI_Controller implements Initializable {
 
     @FXML
     protected void editRecord() {
+        errorLBL.setVisible(false);
+        successLBL.setVisible(false);
         System.out.println("Edit");
         Person p = tv.getSelectionModel().getSelectedItem();
         int index = data.indexOf(p);
         Person p2 = new Person(index + 1, first_name.getText(), last_name.getText(), department.getText(),
                 MajorMenu.getText(), email.getText(),  imageURL.getText());
-        cnUtil.editUser(p.getId(), p2);
-        data.remove(p);
-        data.add(index, p2);
-        tv.getSelectionModel().select(index);
+        try {
+            cnUtil.editUser(p.getId(), p2);
+            data.remove(p);
+            data.add(index, p2);
+            tv.getSelectionModel().select(index);
+            successLBL.setVisible(true);
+            successLBL.setText("Successfuly edited user");
+        } catch (Exception e) {
+            errorLBL.setVisible(false);
+            errorLBL.setText("Error: Could not edit user");
+
+        }
     }
 
     @FXML
@@ -175,6 +200,8 @@ public class DB_GUI_Controller implements Initializable {
     protected void selectedItemTV(MouseEvent mouseEvent) {
         System.out.println("selectedItemTV");
         Person p = tv.getSelectionModel().getSelectedItem();
+        errorLBL.setVisible(false);
+        successLBL.setVisible(false);
         if(p != null) {
             clearBtn.setDisable(false);
             editBtn.setDisable(false);
@@ -185,6 +212,9 @@ public class DB_GUI_Controller implements Initializable {
             MajorMenu.setText(p.getMajor());
             email.setText(p.getEmail());
             imageURL.setText(p.getImageURL());
+        } else {
+            errorLBL.setVisible(true);
+            errorLBL.setText("Error: No selection");
         }
     }
 
