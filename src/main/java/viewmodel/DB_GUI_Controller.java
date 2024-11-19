@@ -14,6 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -26,6 +27,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DB_GUI_Controller implements Initializable {
 
@@ -38,11 +41,24 @@ public class DB_GUI_Controller implements Initializable {
     @FXML
     private TableView<Person> tv;
     @FXML
+    Button addBtn, editBtn, delBtn, clearBtn;
+    @FXML
     private TableColumn<Person, Integer> tv_id;
+    @FXML
+    private MenuButton MajorMenu;
+    @FXML
+    private MenuItem math,computerscience,cpis,english,science;
     @FXML
     private TableColumn<Person, String> tv_fn, tv_ln, tv_department, tv_major, tv_email;
     private final DbConnectivityClass cnUtil = new DbConnectivityClass();
     private final ObservableList<Person> data = cnUtil.getData();
+    private String majorField = "";
+
+    public void setMajorField(ActionEvent event) {
+        MenuItem m = (MenuItem) event.getSource();
+        this.majorField =  m.getText();;
+        MajorMenu.setText(this.majorField);
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -63,7 +79,7 @@ public class DB_GUI_Controller implements Initializable {
     protected void addNewRecord() {
 
             Person p = new Person(first_name.getText(), last_name.getText(), department.getText(),
-                    major.getText(), email.getText(), imageURL.getText());
+                    MajorMenu.getText(), email.getText(), imageURL.getText());
             cnUtil.insertUser(p);
             cnUtil.retrieveId(p);
             p.setId(cnUtil.retrieveId(p));
@@ -77,13 +93,15 @@ public class DB_GUI_Controller implements Initializable {
         first_name.setText("");
         last_name.setText("");
         department.setText("");
-        major.setText("");
+        MajorMenu.setText("Major");
+        majorField = "";
         email.setText("");
         imageURL.setText("");
     }
 
     @FXML
     protected void logOut(ActionEvent actionEvent) {
+        System.out.println("Logout");
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
             Scene scene = new Scene(root, 900, 600);
@@ -116,10 +134,11 @@ public class DB_GUI_Controller implements Initializable {
 
     @FXML
     protected void editRecord() {
+        System.out.println("Edit");
         Person p = tv.getSelectionModel().getSelectedItem();
         int index = data.indexOf(p);
         Person p2 = new Person(index + 1, first_name.getText(), last_name.getText(), department.getText(),
-                major.getText(), email.getText(),  imageURL.getText());
+                MajorMenu.getText(), email.getText(),  imageURL.getText());
         cnUtil.editUser(p.getId(), p2);
         data.remove(p);
         data.add(index, p2);
@@ -128,6 +147,7 @@ public class DB_GUI_Controller implements Initializable {
 
     @FXML
     protected void deleteRecord() {
+        System.out.println("Delete");
         Person p = tv.getSelectionModel().getSelectedItem();
         int index = data.indexOf(p);
         cnUtil.deleteRecord(p);
@@ -137,6 +157,7 @@ public class DB_GUI_Controller implements Initializable {
 
     @FXML
     protected void showImage() {
+        System.out.println("showImage");
         File file = (new FileChooser()).showOpenDialog(img_view.getScene().getWindow());
         if (file != null) {
             img_view.setImage(new Image(file.toURI().toString()));
@@ -145,21 +166,30 @@ public class DB_GUI_Controller implements Initializable {
 
     @FXML
     protected void addRecord() {
+        System.out.println("AddRecord");
+
         showSomeone();
     }
 
     @FXML
     protected void selectedItemTV(MouseEvent mouseEvent) {
+        System.out.println("selectedItemTV");
         Person p = tv.getSelectionModel().getSelectedItem();
-        first_name.setText(p.getFirstName());
-        last_name.setText(p.getLastName());
-        department.setText(p.getDepartment());
-        major.setText(p.getMajor());
-        email.setText(p.getEmail());
-        imageURL.setText(p.getImageURL());
+        if(p != null) {
+            clearBtn.setDisable(false);
+            editBtn.setDisable(false);
+            delBtn.setDisable(false);
+            first_name.setText(p.getFirstName());
+            last_name.setText(p.getLastName());
+            department.setText(p.getDepartment());
+            MajorMenu.setText(p.getMajor());
+            email.setText(p.getEmail());
+            imageURL.setText(p.getImageURL());
+        }
     }
 
     public void lightTheme(ActionEvent actionEvent) {
+        System.out.println("LightTheme");
         try {
             Scene scene = menuBar.getScene();
             Stage stage = (Stage) scene.getWindow();
@@ -175,6 +205,7 @@ public class DB_GUI_Controller implements Initializable {
     }
 
     public void darkTheme(ActionEvent actionEvent) {
+        System.out.println("DarkTheme");
         try {
             Stage stage = (Stage) menuBar.getScene().getWindow();
             Scene scene = stage.getScene();
@@ -227,6 +258,41 @@ public class DB_GUI_Controller implements Initializable {
             this.lname = date;
             this.major = venue;
         }
+    }
+    @FXML
+    void checkValid(KeyEvent event) {
+        String firstName = first_name.getText();
+        String lastName = last_name.getText();
+        String dept = department.getText();
+        String majors = MajorMenu.getText();
+        String emails = email.getText();
+        if(regex("(\\w{3,25})",firstName) && regex("(\\w{3,25})",lastName) && regex("(\\w+)(@)(\\w+)(\\.)(\\w+)",emails) && !dept.equals("")&& !majors.equals("")) {
+            addBtn.setDisable(false);
+        } else {
+            addBtn.setDisable(true);
+        }
+    }
+    private boolean regex(String regExpression, String input) {
+
+        final Pattern pattern = Pattern.compile(regExpression, Pattern.MULTILINE);
+        final Matcher matcher = pattern.matcher(input);
+        boolean found = false;
+        while (matcher.find()) {
+            found = true;
+        }
+        return found;
+    }
+    @FXML
+    void grayOut(MouseEvent event) {
+        clearBtn.setDisable(true);
+        delBtn.setDisable(true);
+        editBtn.setDisable(true);
+    }
+
+    @FXML
+    void clearSelection(MouseEvent event) {
+        tv.getSelectionModel().clearSelection();
+        grayOut(event);
     }
 
 }
