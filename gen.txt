@@ -1,0 +1,11 @@
+Aaron,Scott,CSC,compSci,dfhjksdhfjkd@gmail.com,
+Aaron,Scott,CSC,Math,aarons@farmingdale.edu,
+Dave,Smith,Physics,Science,davidboy@farm.edu,
+Aaron,Scott,Liberal Arts,CSC,scota14@farmingdale.edu,
+Daniel,Myers,Physics,Science,danielM@farmingdale.edu,https://pbs.twimg.com/profile_images/1810756597850718208/hs98Rybo_400x400.jpg
+Prison,Mike,Mathematics,Math,prisonm@farmingdale.edu,https://pbs.twimg.com/profile_images/1810756597850718208/hs98Rybo_400x400.jpg
+*******************************************************************************************************************
+CSC | 1
+Science | 2
+Math | 2
+compSci | 1

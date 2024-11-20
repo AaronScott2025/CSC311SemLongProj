@@ -1,5 +1,7 @@
 package viewmodel;
 
+import com.itextpdf.kernel.colors.Lab;
+import com.sun.jna.platform.win32.Netapi32Util;
 import dao.DbConnectivityClass;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -34,11 +36,13 @@ import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-
+import service.UserSession;
 
 
 public class DB_GUI_Controller implements Initializable {
 
+
+    private UserSession u;
     @FXML
     TextField first_name, last_name, department, major, email, imageURL;
     @FXML
@@ -436,7 +440,7 @@ public class DB_GUI_Controller implements Initializable {
             for(int i = 0; i < al.size(); i++) {
                 p.println(al.get(i)[0] + "," + al.get(i)[1] + "," + al.get(i)[2] + "," + al.get(i)[3] + "," + al.get(i)[4] + "," + al.get(i)[5]);
             }
-            p.println("*******************************************************************************************************************");
+            p.println("****************************************************************************************************************");
             for(String str : m.keySet()) {
                 p.println(str + " | " + m.get(str));
             }
@@ -458,6 +462,12 @@ public class DB_GUI_Controller implements Initializable {
         file.delete();
         successLBL.setVisible(true);
         successLBL.setText("Successfully exported file to PDF");
+    }
+    @FXML
+    private Label usernameLbl;
+    public void initUserSession(UserSession userSession) {
+        u = userSession;
+        usernameLbl.setText(u.getUserName());
     }
 
 }

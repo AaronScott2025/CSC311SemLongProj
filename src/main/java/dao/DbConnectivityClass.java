@@ -94,7 +94,61 @@ public class DbConnectivityClass {
             return hasRegistredUsers;
         }
 
-        public void queryUserByLastName(String name) {
+        public String createUserLogin(String username, String password) throws ClassNotFoundException {
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                //First, connect to MYSQL server and create the database if not created
+                Connection conn = DriverManager.getConnection(SQL_SERVER_URL, USERNAME, PASSWORD);
+                Statement statement = conn.createStatement();
+
+                conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+                statement = conn.createStatement();
+                String sql = "CREATE TABLE IF NOT EXISTS finalcsc311Login (" +
+                        "username VARCHAR(200) NOT NULL PRIMARY KEY, " +
+                        "password VARCHAR(200) NOT NULL)";
+                statement.executeUpdate(sql);
+                statement.close();
+                String sql2 = "INSERT INTO finalcsc311Login(username,password) VALUES(?,?)";
+                PreparedStatement preparedStatement = conn.prepareStatement(sql2);
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password);
+                int row = preparedStatement.executeUpdate();
+                preparedStatement.close();
+                conn.close();
+                if(row <= 0) {
+                    return "Error creating user (No Exception)";
+                }
+            } catch (SQLException e) {
+                return "Error creating user (Exception)";
+            }
+            return "Successfully created user";
+        }
+        public String login(String username, String password) throws ClassNotFoundException {
+            try{
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                Connection c = DriverManager.getConnection(DB_URL,USERNAME,PASSWORD);
+                String sql = "SELECT * FROM finalcsc311Login WHERE username=? AND password=?";
+                PreparedStatement preparedStatement = c.prepareStatement(sql);
+                preparedStatement.setString(1, username);
+                preparedStatement.setString(2, password);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    preparedStatement.close();
+                    resultSet.close();
+                    c.close();
+                    return "Successfully logged in. Welcome " + username;
+                } else {
+                    preparedStatement.close();
+                    resultSet.close();
+                    c.close();
+                    return "Error: Invalid username or password";
+                }
+            } catch (SQLException e) {
+                return "Error with logging in user";
+            }
+        }
+
+            public void queryUserByLastName(String name) {
             connectToDatabase();
             try {
                 Connection conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);

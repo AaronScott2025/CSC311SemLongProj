@@ -6,6 +6,7 @@ module com.example.csc311_db_ui_semesterlongproject {
     requires com.opencsv;
     requires kernel;
     requires layout;
+    requires com.sun.jna.platform;
 
     opens viewmodel;
     exports viewmodel;
