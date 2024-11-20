@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#clearSelection" prefHeight="600.0" prefWidth="920.0" styleClass="anchor_pane" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewmodel.DB_GUI_Controller">
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#clearSelection" prefHeight="600.0" prefWidth="920.0" styleClass="anchor_pane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewmodel.DB_GUI_Controller">
     <children>
         <BorderPane fx:id="borderPane" layoutX="-2.0" layoutY="-3.0" prefHeight="597.0" prefWidth="908.0">
             <top>
@@ -51,6 +51,12 @@
                         <MenuItem mnemonicParsing="false" onAction="#displayAbout" styleClass="menu_items" text="About" />
                             </items>
                         </Menu>
+                  <Menu fx:id="CSVbtn" mnemonicParsing="false" styleClass="menu_options" text="CSV">
+                     <items>
+                        <MenuItem fx:id="importing" mnemonicParsing="false" onAction="#importCSV" styleClass="menu_items" text="Import" />
+                        <MenuItem fx:id="exporting" mnemonicParsing="false" onAction="#exportCSV" styleClass="menu_items" text="Export" />
+                     </items>
+                  </Menu>
                     </menus>
                 </MenuBar>
             </top>
@@ -64,6 +70,7 @@
                                         <Image url="@../images/profile.png" />
                                     </image>
                                 </ImageView>
+                        <Button fx:id="pdfBtn" layoutY="189.0" mnemonicParsing="false" onAction="#genPdf" prefHeight="25.0" prefWidth="134.0" styleClass="db_btn" text="Generate PDF" />
                             </children>
                         </AnchorPane>
                     </children>
@@ -116,6 +123,11 @@
                                 <Insets left="10.0" right="10.0" top="5.0" />
                             </VBox.margin>
                         </TextField>
+                  <TextField fx:id="csvTXT" promptText="path/to/file.csv" styleClass="text_field">
+                     <VBox.margin>
+                        <Insets left="10.0" right="10.0" top="5.0" />
+                     </VBox.margin>
+                  </TextField>
                   <Label prefHeight="6.0" prefWidth="3.0" text=" ">
                      <VBox.margin>
                         <Insets bottom="40.0" right="20.0" top="40.0" />

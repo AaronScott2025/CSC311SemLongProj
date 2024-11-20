@@ -22,13 +22,20 @@ import javafx.stage.Stage;
 import model.Person;
 import service.MyLogger;
 
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+
+
 
 public class DB_GUI_Controller implements Initializable {
 
@@ -55,6 +62,8 @@ public class DB_GUI_Controller implements Initializable {
     private String majorField = "";
     @FXML
     private Label errorLBL,successLBL;
+    @FXML
+    private MenuItem importing,exporting;
 
     public void setMajorField(ActionEvent event) {
         MenuItem m = (MenuItem) event.getSource();
@@ -298,8 +307,10 @@ public class DB_GUI_Controller implements Initializable {
         String emails = email.getText();
         if(regex("(\\w{3,25})",firstName) && regex("(\\w{3,25})",lastName) && regex("(\\w+)(@)(\\w+)(\\.)(\\w+)",emails) && !dept.equals("")&& !majors.equals("")) {
             addBtn.setDisable(false);
+            editBtn.setDisable(false);
         } else {
             addBtn.setDisable(true);
+            editBtn.setDisable(true);
         }
     }
     private boolean regex(String regExpression, String input) {
@@ -323,6 +334,130 @@ public class DB_GUI_Controller implements Initializable {
     void clearSelection(MouseEvent event) {
         tv.getSelectionModel().clearSelection();
         grayOut(event);
+    }
+    @FXML
+    private TextField csvTXT;
+    @FXML
+    void importCSV(ActionEvent event) {
+        System.out.println("importCSV");
+        errorLBL.setVisible(false);
+        successLBL.setVisible(false);
+        if(csvTXT.getText().isEmpty()) {
+            errorLBL.setVisible(true);
+            errorLBL.setText("Please enter a CSV file name in the CSV text field.");
+        }
+        try(CSVReader r = new CSVReader(new FileReader(csvTXT.getText()))) {
+            String except = "";
+            List<String[]> rows = r.readAll();
+            for(int i = 0; i < rows.size(); i++) {
+                String[] row = rows.get(i);
+                Person p = new Person(row[0], row[1], row[2], row[3], row[4], row[5]);
+                if (regex("(\\w{3,25})", row[0]) && regex("(\\w{3,25})", row[1]) && regex("(\\w+)(@)(\\w+)(\\.)(\\w+)", row[4]) && !row[2].equals("") && !row[3].equals("")) {
+                    cnUtil.insertUser(p);
+                    cnUtil.retrieveId(p);
+                    p.setId(cnUtil.retrieveId(p));
+                    data.add(p);
+                    successLBL.setVisible(true);
+                    successLBL.setText("Successfully added: " + first_name.getText() + " to the DB");
+                } else {
+                    except = ", But excluded a few users due to incorrect format";
+                }
+            }
+            successLBL.setVisible(true);
+            successLBL.setText("Successfully exported file to DB" + except);
+        } catch (IOException | CsvException e) {
+            errorLBL.setVisible(true);
+            errorLBL.setText("Error: Something went wrong with your CSV file. Please check format, and try again");
+            throw new RuntimeException(e);
+        }
+        clearForm();
+    }
+    @FXML
+    void exportCSV(ActionEvent event) throws FileNotFoundException {
+        System.out.println("exportCSV");
+        errorLBL.setVisible(false);
+        successLBL.setVisible(false);
+        ArrayList<String[]> al = new ArrayList<String[]>();
+        for(int i = 0; i < data.size(); i++) {
+            Person p = (Person) data.get(i);
+            String[] s = new String[6];
+            s[0] = p.getFirstName();
+            s[1] = p.getLastName();
+            s[2] = p.getDepartment();
+            s[3] = p.getMajor();
+            s[4] = p.getEmail();
+            s[5] = p.getImageURL();
+            al.add(s);
+
+        }
+        File f = new File("CSVOut.csv");
+        try(PrintWriter p = new PrintWriter(f)) {
+            for(int i = 0; i < al.size(); i++) {
+                p.println(al.get(i)[0] + "," + al.get(i)[1] + "," + al.get(i)[2] + "," + al.get(i)[3] + "," + al.get(i)[4] + "," + al.get(i)[5]);
+            }
+            successLBL.setVisible(true);
+            successLBL.setText("Successfully exported file to CSV (CSVOut.csv)");
+        } catch (FileNotFoundException e) {
+            errorLBL.setVisible(true);
+            errorLBL.setText("Error, Please try again");
+            e.printStackTrace();
+        }
+
+    }
+    @FXML
+    Button pdfBtn;
+    @FXML
+    void genPdf(ActionEvent event) throws IOException {
+        System.out.println("genPdf");
+        errorLBL.setVisible(false);
+        successLBL.setVisible(false);
+        ArrayList<String> count = new ArrayList<>();
+        ArrayList<String[]> al = new ArrayList<String[]>();
+        for(int i = 0; i < data.size(); i++) {
+            Person p = (Person) data.get(i);
+            String[] s = new String[6];
+            s[0] = p.getFirstName();
+            s[1] = p.getLastName();
+            s[2] = p.getDepartment();
+            s[3] = p.getMajor();
+            count.add(s[3]);
+            s[4] = p.getEmail();
+            s[5] = p.getImageURL();
+            al.add(s);
+            File f = new File("gen.txt");
+        }
+        count.sort(String.CASE_INSENSITIVE_ORDER);
+        Map<String,Integer> m = new HashMap<>();
+        for(String string : count) {
+            m.put(string, m.getOrDefault(string, 0) + 1);
+        }
+        File f = new File("gen.txt");
+        try(PrintWriter p = new PrintWriter(f)) {
+            for(int i = 0; i < al.size(); i++) {
+                p.println(al.get(i)[0] + "," + al.get(i)[1] + "," + al.get(i)[2] + "," + al.get(i)[3] + "," + al.get(i)[4] + "," + al.get(i)[5]);
+            }
+            p.println("*******************************************************************************************************************");
+            for(String str : m.keySet()) {
+                p.println(str + " | " + m.get(str));
+            }
+        } catch (FileNotFoundException e) {
+            errorLBL.setVisible(true);
+            errorLBL.setText("Error, Please try again");
+        }
+        PdfDocument pdf = new PdfDocument(new PdfWriter("Report.pdf"));
+        Document document = new Document(pdf);
+
+        File file = new File("gen.txt");
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        String line;
+
+        while ((line = br.readLine()) != null) {
+            document.add(new Paragraph(line));
+        }
+        document.close();
+        file.delete();
+        successLBL.setVisible(true);
+        successLBL.setText("Successfully exported file to PDF");
     }
 
 }

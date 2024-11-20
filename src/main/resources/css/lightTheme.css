@@ -12,31 +12,31 @@
 }
 
 .left_pane {
-    -fx-background-color: #a73;
+    -fx-background-color: #e6a3ff;
     -fx-pref-width: 130px;
     -fx-pref-height: 600px;
 }
 
 .admin_section {
-    -fx-background-color: #999;
+    -fx-background-color: #de7afe;
 }
 
 .table_columns {
-    -fx-background-color: white;
+    -fx-background-color: #c9ebff;
     -fx-text-fill: black;
 }
 
 
 .menu_bar {
-    -fx-background-color: #841;
+    -fx-background-color: #006cab;
 }
 
 .anchor_pane {
-    -fx-background-color: #a73;
+    -fx-background-color: #de7afe;
 }
 
 .text_field_pane {
-    -fx-background-color: #79dc05;
+    -fx-background-color: #6fd1ff;
 
 }
 
@@ -46,12 +46,16 @@
     -fx-border-width: 2;
 }
 
+.vbox{
+    -fx-background-color: #79dc05;
+}
+
 
 
 
 .table-view .column-header,
 .table-view .column-header-background .filler {
-    -fx-background-color:  #999999;
+    -fx-background-color:  #8b9cfc;
      -fx-text-fill: black;
 }
 .table-view .column-header .label{
@@ -62,7 +66,7 @@
 .table-view .cell{
    -fx-cell-size: 35;
   -fx-alignment: center-left;
-  -fx-background-color: #FFFFFF;
+  -fx-background-color: #d6dcff;
   -fx-border-color: #29292D;
   -fx-text-fill: black;
   -fx-alignment: CENTER_LEFT;
@@ -75,7 +79,7 @@
 
 }
 .table-view:focused .table-row-cell:selected .table-cell {
-    -fx-background-color: lightBlue;
+    -fx-background-color: #de7afe;
     -fx-text-fill: grey;
 }
 /* scroll bar starts here */
@@ -91,7 +95,7 @@
 .table-view .scroll-bar:horizontal .track,
 .table-view .scroll-bar:vertical .track{
 	-fx-background-color: transparent;
-	-fx-border-color:derive( #FFFFFF,80%);
+	-fx-border-color:derive( #de7afe,80%);
 
 	-fx-background-radius: 2em;
 	-fx-border-radius:2em;
@@ -100,8 +104,11 @@
 /* The main scrollbar **thumb** CSS class which we drag every time (movable) */
 .table-view .scroll-bar:horizontal .thumb,
 .table-view .scroll-bar:vertical .thumb {
-    -fx-background-color:derive( #FFFFFF,90%);
+    -fx-background-color:derive( #de7afe,90%);
 	-fx-background-insets: 1, 0, 0;
 	-fx-background-radius: 2em;
 
+}
+.hbox{
+    -fx-background-color: #de7afe;
 }

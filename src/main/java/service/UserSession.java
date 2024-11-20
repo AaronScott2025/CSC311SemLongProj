@@ -45,8 +45,8 @@ public class UserSession {
     public String getPassword() {
         return this.password;
     }
-
     public String getPrivileges() {
+
         return this.privileges;
     }
 
