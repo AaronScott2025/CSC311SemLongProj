@@ -6,6 +6,8 @@ import model.Person;
 import service.MyLogger;
 
 import java.sql.*;
+import java.util.Objects;
+
 public class DbConnectivityClass {
     final static String DB_NAME="CSC311_BD_TEMP";
         MyLogger lg= new MyLogger();
@@ -124,6 +126,9 @@ public class DbConnectivityClass {
             return "Successfully created user";
         }
         public String login(String username, String password) throws ClassNotFoundException {
+            if(Objects.equals(username, "") || Objects.equals(password, "")) {
+                return "Error Fill out fields";
+            }
             try{
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Connection c = DriverManager.getConnection(DB_URL,USERNAME,PASSWORD);
@@ -141,7 +146,7 @@ public class DbConnectivityClass {
                     preparedStatement.close();
                     resultSet.close();
                     c.close();
-                    return "Error: Invalid username or password";
+                    return "Error Invalid username or password";
                 }
             } catch (SQLException e) {
                 return "Error with logging in user";
