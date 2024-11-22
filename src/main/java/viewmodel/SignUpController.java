@@ -17,7 +17,7 @@ public class SignUpController {
     @FXML
     private TextField userTXT; //username
     @FXML
-    private PasswordField passTXT; //password
+    private PasswordField passTXT; //passwords
     public void createNewAccount(ActionEvent actionEvent) throws ClassNotFoundException {
         String s = cnUtil.createUserLogin(userTXT.getText(),passTXT.getText());
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
