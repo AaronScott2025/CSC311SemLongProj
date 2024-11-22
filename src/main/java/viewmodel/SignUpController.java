@@ -15,9 +15,9 @@ import javafx.stage.Stage;
 public class SignUpController {
     private final DbConnectivityClass cnUtil = new DbConnectivityClass();
     @FXML
-    private TextField userTXT;
+    private TextField userTXT; //username
     @FXML
-    private PasswordField passTXT;
+    private PasswordField passTXT; //password
     public void createNewAccount(ActionEvent actionEvent) throws ClassNotFoundException {
         String s = cnUtil.createUserLogin(userTXT.getText(),passTXT.getText());
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
