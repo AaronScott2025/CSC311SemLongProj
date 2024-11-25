@@ -76,7 +76,7 @@ public class LoginController {
             } else {
                 x--;
                 handleLBL.setVisible(true);
-                handleLBL.setText(s + x);
+                handleLBL.setText(s +  '(' +x + ')');
                 handleLBL.setStyle("-fx-text-fill: red;");
                 if(x == 0) {
                     System.exit(1);

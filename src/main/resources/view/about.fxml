@@ -5,14 +5,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: green;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TextArea layoutX="6.0" layoutY="51.0" prefHeight="343.0" prefWidth="584.0" text="Your text goes here " wrapText="true">
+      <TextArea editable="false" layoutX="6.0" layoutY="51.0" prefHeight="343.0" prefWidth="584.0" text="You can add users to the database using the textboxes on the right hand side of the screen. The fields must have valid information in them in order to press the associated buttons. Otherwise, the system wont let you input those values.&#10;&#10;You can also use the Generate PDF button to list the users, then after a page break, shows how many students per major in the PDF.&#10;&#10;Using the CSV button, you can either import a relevant CSV file, or export the contents of the DB as a CSV file.&#10;===============================================&#10;This part is a message for the professor: Thank you for teaching your class in a way that made the whole experience fun, enjoyable, and most importantly, very informative. Ive learned many things in this class, alot of which i have been able to apply elsewhere (Such as RegEx in my internship). Have a wonderful holiday, and Im looking foward to having you as my professor again in the Spring semester. " wrapText="true">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </TextArea>
-      <Label alignment="TOP_LEFT" layoutX="8.0" layoutY="11.0" prefHeight="44.0" prefWidth="542.0" text="Developer: MM mM">
+      <Label alignment="CENTER" layoutX="29.0" layoutY="14.0" prefHeight="44.0" prefWidth="542.0" text="About the system" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="26.0" />
          </font>
