@@ -27,6 +27,7 @@ public class LoginController {
     private PasswordField passwordField;
     @FXML
     private Label handleLBL;
+    int x = 3;
 
 
     @FXML
@@ -73,9 +74,13 @@ public class LoginController {
                 window.setScene(scene);
                 window.show();
             } else {
+                x--;
                 handleLBL.setVisible(true);
-                handleLBL.setText(s);
+                handleLBL.setText(s + x);
                 handleLBL.setStyle("-fx-text-fill: red;");
+                if(x == 0) {
+                    System.exit(1);
+                }
             }
         } catch (Exception e) {
             handleLBL.setVisible(true);
