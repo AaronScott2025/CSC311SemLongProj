@@ -49,7 +49,7 @@ public class LoginController {
         fadeOut2.setFromValue(0);
         fadeOut2.setToValue(1);
         fadeOut2.play();
-    }
+    }//
     private static BackgroundImage createImage(String url) {
         return new BackgroundImage(
                 new Image(url),
